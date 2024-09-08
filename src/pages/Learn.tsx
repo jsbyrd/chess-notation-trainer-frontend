@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 
 const Learn = () => {
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       <Navbar />
       <div className="flex-grow overflow-auto pl-[60px] pt-[30px] p-4">
         <h1 className="text-3xl font-bold mb-6">
