@@ -7,6 +7,8 @@ export const MakeThatMove = () => {
   // const [game, setGame] = useState(new Chess());
   const game = new Chess();
 
+  console.log(fenStrings);
+
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * fenStrings.length);
     const randomPosition = fenStrings[randomIndex];
