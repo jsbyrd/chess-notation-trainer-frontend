@@ -10,11 +10,11 @@ import { Link } from "react-router-dom";
 const useStyles = createUseStyles({
   navContainer: {
     width: "200px",
-    height: "100vh",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    borderRight: "1px solid #a3a3a3",
+    borderRight: "1px solid #d4d4d4",
   },
   navSectionContainer: {
     width: "100%",
@@ -55,10 +55,7 @@ const Navbar = () => {
 
   return (
     <div className={`${classes.navContainer} font-medium flex-shrink-0`}>
-      <div className={`${classes.navSectionContainer}`}>
-        <div className={`${classes.navTitle} text-2xl my-[25px]`}>
-          <Link to="/">NotationChess</Link>
-        </div>
+      <div className={`${classes.navSectionContainer} mt-4`}>
         <Accordion type="single" collapsible>
           <AccordionItem value="minigames">
             <AccordionTrigger className="">Minigames</AccordionTrigger>
