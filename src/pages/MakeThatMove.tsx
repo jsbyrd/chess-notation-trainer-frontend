@@ -10,6 +10,7 @@ type ChessColor = "white" | "black" | "random";
 const MakeThatMove = () => {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [selectedColor, setSelectedColor] = useState<ChessColor>("white");
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const randomChessColor = (): "white" | "black" => {
     return Math.random() < 0.5 ? "white" : "black";
@@ -19,8 +20,13 @@ const MakeThatMove = () => {
     setSelectedColor(value);
   };
 
+  const handleStartPlaying = () => {
+    setIsPlaying(true);
+  };
+
   return (
     <div className="flex flex-col items-center container mx-auto px-4 py-8 max-w-3xl">
+      <p>Is playing: {isPlaying ? "true" : "false"}</p>
       <h1 className="text-3xl font-bold mb-4 text-center">Make That Move</h1>
 
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
@@ -43,7 +49,7 @@ const MakeThatMove = () => {
       </div>
 
       <div className="flex justify-center space-x-4 mb-6">
-        <Button>Start</Button>
+        <Button onClick={handleStartPlaying}>Start</Button>
         <Button variant="outline">Practice</Button>
       </div>
 

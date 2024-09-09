@@ -104,12 +104,16 @@ const Navbar = () => {
         </Link>
       </div>
       <div className={`${classes.navSectionContainer}`}>
-        <div className={`${classes.navElement} ${classes.clickableElement}`}>
-          Settings
-        </div>
-        <div className={`${classes.navElement} ${classes.clickableElement}`}>
-          Report Bug
-        </div>
+        <Link to="settings">
+          <div className={`${classes.navElement} ${classes.clickableElement}`}>
+            Settings
+          </div>
+        </Link>
+        <Link to="report-bug">
+          <div className={`${classes.navElement} ${classes.clickableElement}`}>
+            Report Bug
+          </div>
+        </Link>
         <div
           className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
         >
