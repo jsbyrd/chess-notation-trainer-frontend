@@ -59,7 +59,7 @@ const Navbar = () => {
         <Accordion type="single" collapsible>
           <AccordionItem value="minigames">
             <AccordionTrigger className="">Minigames</AccordionTrigger>
-            <Link to="/make-move">
+            <Link to="/make-move/instructions">
               <div className={`${classes.clickableElement}`}>
                 <AccordionContent className={classes.navElement}>
                   - Make that Move

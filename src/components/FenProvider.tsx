@@ -1,21 +1,29 @@
-import React, { createContext, PropsWithChildren } from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { fenStrings } from "@/utils/fenStrings";
-// import { processPGN } from "@/utils/pgnToFen";
-// import { pgnText } from "@/utils/pgnText";
 
-// Create the context
-export const FenContext = createContext<string[]>([]);
+interface Fen {
+  getRandomPosition: () => string;
+}
 
-// Create the provider component
-export const FenProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  // const uniqueFenStrings = useMemo(() => {
-  //   if (!pgnText) return [];
-  //   const fenStrings = processPGN(pgnText);
-  //   // Remove duplicates to get unique board positions
-  //   return Array.from(new Set(fenStrings));
-  // }, []);
+const FenContext = createContext<Fen | undefined>(undefined);
+
+export const FenProvider = ({ children }: { children: ReactNode }) => {
+  const getRandomPosition = (): string => {
+    return fenStrings[Math.floor(Math.random() * fenStrings.length)];
+  };
 
   return (
-    <FenContext.Provider value={fenStrings}>{children}</FenContext.Provider>
+    <FenContext.Provider value={{ getRandomPosition }}>
+      {children}
+    </FenContext.Provider>
   );
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useFen = () => {
+  const context = useContext(FenContext);
+  if (!context) {
+    throw new Error("useGameOptions must be used within a GameOptionsProvider");
+  }
+  return context;
 };

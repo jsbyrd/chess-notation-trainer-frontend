@@ -4,13 +4,16 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useGameOptions } from "@/components/GameOptionProvider";
+import { useNavigate } from "react-router-dom";
 
 type ChessColor = "white" | "black" | "random";
 
-const MakeThatMove = () => {
+const MakeMoveInstructions = () => {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [selectedColor, setSelectedColor] = useState<ChessColor>("white");
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const gameOptions = useGameOptions();
+  const navigate = useNavigate();
 
   const randomChessColor = (): "white" | "black" => {
     return Math.random() < 0.5 ? "white" : "black";
@@ -20,13 +23,26 @@ const MakeThatMove = () => {
     setSelectedColor(value);
   };
 
-  const handleStartPlaying = () => {
-    setIsPlaying(true);
+  const handleStartGame = () => {
+    gameOptions.setOptions({
+      color: selectedColor,
+      showCoordinates: showCoordinates,
+      isTimed: true,
+    });
+    navigate("/make-move/game");
+  };
+
+  const handleStartPractice = () => {
+    gameOptions.setOptions({
+      color: selectedColor,
+      showCoordinates: showCoordinates,
+      isTimed: false,
+    });
+    navigate("/make-move/game");
   };
 
   return (
     <div className="flex flex-col items-center container mx-auto px-4 py-8 max-w-3xl">
-      <p>Is playing: {isPlaying ? "true" : "false"}</p>
       <h1 className="text-3xl font-bold mb-4 text-center">Make That Move</h1>
 
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
@@ -49,8 +65,10 @@ const MakeThatMove = () => {
       </div>
 
       <div className="flex justify-center space-x-4 mb-6">
-        <Button onClick={handleStartPlaying}>Start</Button>
-        <Button variant="outline">Practice</Button>
+        <Button onClick={handleStartGame}>Start</Button>
+        <Button variant="outline" onClick={handleStartPractice}>
+          Practice
+        </Button>
       </div>
 
       <div className="flex justify-center items-center space-x-6 mb-4">
@@ -84,4 +102,4 @@ const MakeThatMove = () => {
   );
 };
 
-export default MakeThatMove;
+export default MakeMoveInstructions;
