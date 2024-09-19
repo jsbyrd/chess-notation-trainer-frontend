@@ -66,7 +66,7 @@ const Navbar = () => {
                 </AccordionContent>
               </div>
             </Link>
-            <Link to="/name-notation">
+            <Link to="/name-notation/instructions">
               <div className={`${classes.clickableElement}`}>
                 <AccordionContent className={classes.navElement}>
                   - Name that Notation

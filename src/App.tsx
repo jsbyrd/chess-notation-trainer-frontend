@@ -7,7 +7,6 @@ import Register from "./pages/Register";
 import Error from "./pages/Error";
 import Learn from "./pages/Learn";
 import MakeMoveInstructions from "./pages/MakeMoveInstructions";
-import NameThatNotation from "./pages/NameThatNotation";
 import Analytics from "./pages/Analytics";
 import PlayHuman from "./pages/PlayHuman";
 import PlayBot from "./pages/PlayBot";
@@ -16,6 +15,8 @@ import Settings from "./pages/Settings";
 import ReportBug from "./pages/ReportBug";
 import MakeMoveGame from "./pages/MakeMoveGame";
 import { GameOptionsProvider } from "./components/GameOptionProvider";
+import NameNotationInstructions from "./pages/NameNotationInstructions";
+import NameNotationGame from "./pages/NameNotationGame";
 
 const router = createBrowserRouter([
   {
@@ -51,7 +52,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/name-notation",
-        element: <NameThatNotation />,
+        element: <Outlet />,
+        children: [
+          {
+            path: "/name-notation/instructions",
+            element: <NameNotationInstructions />,
+          },
+          {
+            path: "/name-notation/game",
+            element: <NameNotationGame />,
+          },
+        ],
       },
       {
         path: "/play-human",

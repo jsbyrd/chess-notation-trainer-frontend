@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 type ChessColor = "white" | "black" | "random";
 
-const MakeMoveInstructions = () => {
+const NameNotationInstructions = () => {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [selectedColor, setSelectedColor] = useState<ChessColor>("white");
   const gameOptions = useGameOptions();
@@ -29,7 +29,7 @@ const MakeMoveInstructions = () => {
       showCoordinates: showCoordinates,
       isTimed: true,
     });
-    navigate("/make-move/game");
+    navigate("/name-notation/game");
   };
 
   const handleStartPractice = () => {
@@ -38,20 +38,22 @@ const MakeMoveInstructions = () => {
       showCoordinates: showCoordinates,
       isTimed: false,
     });
-    navigate("/make-move/game");
+    navigate("/name-notation/game");
   };
 
   return (
     <div className="flex flex-col items-center container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-4 text-center">Make That Move</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center">
+        Name That Notation
+      </h1>
 
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
         <p className="text-sm text-center">
-          Instructions: You will be given a random board position and a move to
-          make in algebraic notation. Your goal is to make as many correct moves
-          as possible in 60 seconds! Do note that the move is randomly selected
-          from all possible moves in the position and may or may not be
-          nonsensical.
+          Instructions: You will be given a random board position and an arrow
+          indicating a move to be made. Your goal is to write out the move in
+          algebraic notation and do that for as many moves as possible in 60
+          seconds! Do note that moves are randomly selected from all possible
+          moves in a given position and may or may not be nonsensical.
         </p>
       </div>
 
@@ -104,4 +106,4 @@ const MakeMoveInstructions = () => {
   );
 };
 
-export default MakeMoveInstructions;
+export default NameNotationInstructions;
