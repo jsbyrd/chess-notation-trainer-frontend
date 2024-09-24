@@ -8,10 +8,11 @@ import { useGameOptions } from "@/components/GameOptionProvider";
 import { useNavigate } from "react-router-dom";
 
 type ChessColor = "white" | "black" | "random";
+const DEFAULT_VALUE = "random";
 
 const NameNotationInstructions = () => {
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [selectedColor, setSelectedColor] = useState<ChessColor>("white");
+  const [selectedColor, setSelectedColor] = useState<ChessColor>(DEFAULT_VALUE);
   const gameOptions = useGameOptions();
   const navigate = useNavigate();
 
@@ -76,7 +77,10 @@ const NameNotationInstructions = () => {
       </div>
 
       <div className="flex justify-center items-center space-x-6 mb-4">
-        <RadioGroup defaultValue="white" onValueChange={handleColorChange}>
+        <RadioGroup
+          defaultValue={DEFAULT_VALUE}
+          onValueChange={handleColorChange}
+        >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="white" id="white" />
             <Label htmlFor="white">White</Label>

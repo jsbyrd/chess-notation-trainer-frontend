@@ -203,6 +203,10 @@ const MakeMoveInstructions = () => {
             <AlertDialogDescription>
               Your final score: {score} / {total}
             </AlertDialogDescription>
+            <AlertDialogDescription>
+              Your accuracy:{" "}
+              {total === 0 ? "0.00%" : ((score / total) * 100).toFixed(2)}%
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={handleReset}>

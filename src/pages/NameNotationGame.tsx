@@ -122,7 +122,9 @@ const NameNotationGame = () => {
   };
 
   const handleAnswerSubmission = (e: React.FormEvent) => {
-    e.preventDefault(); // Do not reload page
+    e.preventDefault();
+
+    // If user is correct
     if (userAnswer === move) {
       setScore(score + 1);
       setTotal(total + 1);
@@ -133,14 +135,25 @@ const NameNotationGame = () => {
         setUserAnswer("");
         setUserAnswerColor("black");
       }, 500);
-    } else {
+    }
+    // If user is incorrect
+    else {
       setTotal(total + 1);
-
       setUserAnswerColor(INCORRECT_ANSWER_COLOR);
       setTimeout(() => {
         setUserAnswerColor("black");
       }, 500);
     }
+  };
+
+  const handleSkipPosition = () => {
+    setTotal(total + 1);
+    setUserAnswerColor(INCORRECT_ANSWER_COLOR);
+    setTimeout(() => {
+      generateNextPosition();
+      setUserAnswer("");
+      setUserAnswerColor("black");
+    }, 500);
   };
 
   return (
@@ -178,7 +191,8 @@ const NameNotationGame = () => {
         </Button>
         <Button
           className="flex-none basis-1/12 bg-red-600 hover:bg-red-500"
-          type="submit"
+          type="button"
+          onClick={handleSkipPosition}
         >
           Skip
         </Button>
@@ -214,6 +228,10 @@ const NameNotationGame = () => {
             <AlertDialogTitle>Time's up!</AlertDialogTitle>
             <AlertDialogDescription>
               Your final score: {score} / {total}
+            </AlertDialogDescription>
+            <AlertDialogDescription>
+              Your accuracy:{" "}
+              {total === 0 ? "0.00%" : ((score / total) * 100).toFixed(2)}%
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
