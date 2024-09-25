@@ -76,14 +76,14 @@ const Navbar = () => {
           </AccordionItem>
           <AccordionItem value="play">
             <AccordionTrigger>Play</AccordionTrigger>
-            <Link to="/play-human">
+            <Link to="/play-human/instructions">
               <div className={`${classes.clickableElement}`}>
                 <AccordionContent className={classes.navElement}>
                   - vs Human
                 </AccordionContent>
               </div>
             </Link>
-            <Link to="/play-bot">
+            <Link to="/play-bot/instructions">
               <div className={`${classes.clickableElement}`}>
                 <AccordionContent className={classes.navElement}>
                   - vs Bot

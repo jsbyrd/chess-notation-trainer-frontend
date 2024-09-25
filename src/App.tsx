@@ -17,6 +17,7 @@ import MakeMoveGame from "./pages/MakeMoveGame";
 import { GameOptionsProvider } from "./components/GameOptionProvider";
 import NameNotationInstructions from "./pages/NameNotationInstructions";
 import NameNotationGame from "./pages/NameNotationGame";
+import PlayBotInstructions from "./pages/PlayBotInstructions";
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/play-bot",
-        element: <PlayBot />,
+        element: <Outlet />,
+        children: [
+          {
+            path: "/play-bot/instructions",
+            element: <PlayBotInstructions />,
+          },
+          {
+            path: "/play-bot/game",
+            element: <PlayBot />,
+          },
+        ],
       },
       {
         path: "/settings",

@@ -6,6 +6,7 @@ interface GameOptions {
   color: ChessColor;
   showCoordinates: boolean;
   isTimed: boolean;
+  difficulty: number;
   setOptions: (options: Partial<GameOptions>) => void;
   resetOptions: () => void;
 }
@@ -17,6 +18,7 @@ export const GameOptionsProvider = ({ children }: { children: ReactNode }) => {
     color: "white",
     showCoordinates: true,
     isTimed: true,
+    difficulty: 100,
     setOptions: () => {},
     resetOptions: () => {},
   });
