@@ -7,9 +7,8 @@ import {
   getStockfishEval,
   StockfishQueryReturn,
 } from "@/services/stockfishService";
-import { Chess } from "chess.js";
+import { Chess, DEFAULT_POSITION } from "chess.js";
 import {
-  Arrow,
   BoardOrientation,
   PromotionPieceOption,
   Square,
@@ -24,23 +23,26 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import {
+  EndGameState,
+  getEndGameMessage,
+  getEndGameState,
+} from "@/utils/endGameUtils";
+import { useToast } from "@/hooks/use-toast";
 
-const INCORRECT_ANSWER_COLOR = "#dc2626";
-const CORRECT_ANSWER_COLOR = "#16a34a";
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 const PlayBot = () => {
+  const { toast } = useToast();
   const gameOptions = useGameOptions();
   const navigate = useNavigate();
   const [position, setPosition] = useState<string>(defaultFen);
   const [userAnswer, setUserAnswer] = useState("");
+  const [endGameMessage, setEndGameMessage] = useState("");
   const [activeColor, setActiveColor] = useState<BoardOrientation>("white");
   const [showPopup, setShowPopup] = useState(false);
-  // const [isActiveGame, setIsActiveGame] = useState(true);
-  const [customArrows, setCustomArrows] = useState<Arrow[] | undefined>(
-    undefined
-  );
-  const [userAnswerColor, setUserAnswerColor] = useState("black");
+  const [isActiveGame, setIsActiveGame] = useState(true);
+  const [activeChess, setActiveChess] = useState(new Chess(defaultFen));
   const difficulty = useMemo(() => gameOptions.difficulty, [gameOptions]);
   const userColor = useMemo((): BoardOrientation => {
     if (gameOptions.color === "random") {
@@ -51,34 +53,74 @@ const PlayBot = () => {
   }, [gameOptions]);
 
   const makeRandomMove = () => {
-    // TODO: Get this to work
+    const chess = new Chess(position);
+    const moves = chess.moves();
+    const randomMove = moves[Math.floor(Math.random() * moves.length)];
+    chess.move(randomMove);
+    setActiveChess(chess);
+    setPosition(chess.fen());
+    setActiveColor(userColor);
   };
 
-  const handleBotMove = async () => {
-    const oddsForRandomMove = difficulty / 100;
-    if (Math.random() > oddsForRandomMove) {
-      // Generate random move and make it
-      return;
-    }
+  const makeStockfishMove = async () => {
     const chessEvalRes: Partial<StockfishQueryReturn> =
       await getStockfishEval(position);
 
     if (!chessEvalRes.success) {
-      // Generate random move and make it
-      console.log(chessEvalRes.error);
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description:
+          "There was a problem making a request to stockfish. Now defaulting to a random move.",
+      });
+      makeRandomMove();
+      return;
+    }
+
+    // Extract best move from our response object and make that move
+    const bestMove = chessEvalRes.bestmove?.split(" ")[1];
+
+    if (!bestMove) {
+      makeRandomMove();
+      return;
+    }
+
+    const chess = new Chess(position);
+    chess.move(bestMove);
+    setActiveChess(chess);
+    setPosition(chess.fen());
+    setActiveColor(userColor);
+  };
+
+  // Either generate and make a random move, or get a move from stockfish and make that move
+  const handleBotMove = async () => {
+    const oddsForRandomMove = difficulty / 100;
+    if (Math.random() > oddsForRandomMove) {
+      makeRandomMove();
     } else {
-      console.log(chessEvalRes);
+      await makeStockfishMove();
     }
   };
 
+  // Check for win/loss/draw after every move and handle bot moves
   useEffect(() => {
-    // if (activeColor !== userColor) handleBotMove();
-    // handleBotMove();
+    const endGameState = getEndGameState(activeChess);
+    if (endGameState !== EndGameState.ACTIVE_GAME) {
+      setIsActiveGame(false);
+      setEndGameMessage(
+        getEndGameMessage(endGameState, userColor !== activeColor)
+      );
+      setShowPopup(true);
+      return;
+    }
+
+    if (activeColor !== userColor) handleBotMove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeColor]);
 
   const handleReset = () => {
-    console.log("hi again");
+    setIsActiveGame(true);
+    setPosition(DEFAULT_POSITION);
+    setActiveChess(new Chess(DEFAULT_POSITION));
   };
 
   const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +129,7 @@ const PlayBot = () => {
 
   const handleAnswerSubmission = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isActiveGame) return;
 
     const currentGameState = new Chess(position);
     const potentialMove = currentGameState
@@ -95,37 +138,19 @@ const PlayBot = () => {
 
     // If the submits something that isn't a valid move, notifiy them with a toast
     if (!potentialMove) {
-      // TODO: Notify with toast
-      console.log("bad move");
+      toast({
+        title: "Bad move!",
+        description: `Your move "${userAnswer}" is not a valid move in the current position. Please try again.`,
+      });
       return;
     }
 
     // Update board and make it the bot's turn
     currentGameState.move(userAnswer);
+    setActiveChess(currentGameState);
     setPosition(currentGameState.fen());
     setUserAnswer("");
     setActiveColor(userColor === "white" ? "black" : "white");
-
-    // If user is correct
-    // if (userAnswer === move) {
-    //   setScore(score + 1);
-    //   setTotal(total + 1);
-    //   setUserAnswerColor(CORRECT_ANSWER_COLOR);
-
-    //   setTimeout(() => {
-    //     generateNextPosition();
-    //     setUserAnswer("");
-    //     setUserAnswerColor("black");
-    //   }, 500);
-    // }
-    // // If user is incorrect
-    // else {
-    //   setTotal(total + 1);
-    //   setUserAnswerColor(INCORRECT_ANSWER_COLOR);
-    //   setTimeout(() => {
-    //     setUserAnswerColor("black");
-    //   }, 500);
-    // }
   };
 
   const handleMoveDrop = (
@@ -141,7 +166,10 @@ const PlayBot = () => {
         to: targetSquare,
         promotion: promotionPiece ? promotionPiece[1].toLowerCase() : "q",
       });
+      setActiveChess(newGameState);
       setPosition(newGameState.fen());
+      setUserAnswer("");
+      setActiveColor(userColor === "white" ? "black" : "white");
       return true;
     } catch {
       return false;
@@ -154,7 +182,6 @@ const PlayBot = () => {
     promoteToSquare: Square | undefined
   ) => {
     if (!piece || !promoteFromSquare || !promoteToSquare) {
-      // TODO: Notify user of error via toast
       return false;
     }
     return handleMoveDrop(
@@ -175,7 +202,7 @@ const PlayBot = () => {
         <Input
           className="flex-1 basis-10/12"
           style={{
-            border: `2px solid ${userAnswerColor}`,
+            border: `2px solid black`,
           }}
           placeholder="Move"
           value={userAnswer}
@@ -198,8 +225,7 @@ const PlayBot = () => {
           customBoardStyle={{
             marginBottom: "20px",
           }}
-          customArrows={customArrows ?? ([] as Arrow[])}
-          arePiecesDraggable={true}
+          arePiecesDraggable={isActiveGame}
           onPieceDrop={handleMoveDrop}
           onPromotionPieceSelect={handlePromotion}
         />
@@ -217,19 +243,17 @@ const PlayBot = () => {
       <AlertDialog open={showPopup} onOpenChange={setShowPopup}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Time's up!</AlertDialogTitle>
-            <AlertDialogDescription>
-              You lost! TODO: Update later
-            </AlertDialogDescription>
+            <AlertDialogTitle>Game Over!</AlertDialogTitle>
+            <AlertDialogDescription>{endGameMessage}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={handleReset}>
-              Restart Game
+              Play Again
             </AlertDialogAction>
             <AlertDialogAction
-              onClick={() => navigate("/make-move/instructions")}
+              onClick={() => navigate("/play-bot/instructions")}
             >
-              Back to Instructions
+              Back to Game Settings
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

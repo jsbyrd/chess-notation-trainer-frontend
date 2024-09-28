@@ -18,6 +18,7 @@ import { GameOptionsProvider } from "./components/GameOptionProvider";
 import NameNotationInstructions from "./pages/NameNotationInstructions";
 import NameNotationGame from "./pages/NameNotationGame";
 import PlayBotInstructions from "./pages/PlayBotInstructions";
+import { Toaster } from "./components/ui/toaster";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,7 @@ export const App = () => {
     <GameOptionsProvider>
       <FenProvider>
         <RouterProvider router={router} />
+        <Toaster />
       </FenProvider>
     </GameOptionsProvider>
   );

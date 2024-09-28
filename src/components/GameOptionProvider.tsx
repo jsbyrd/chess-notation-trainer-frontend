@@ -18,7 +18,7 @@ export const GameOptionsProvider = ({ children }: { children: ReactNode }) => {
     color: "white",
     showCoordinates: true,
     isTimed: true,
-    difficulty: 100,
+    difficulty: 50,
     setOptions: () => {},
     resetOptions: () => {},
   });
