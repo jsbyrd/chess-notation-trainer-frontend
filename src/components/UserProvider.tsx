@@ -12,8 +12,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const generateRandomUsername = (length: number) => {
     const chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "*";
-    for (let i = 1; i < length; i++) {
+    let result = "*USER";
+    for (let i = 5; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;

@@ -20,6 +20,7 @@ import { GameOptionsProvider } from "./components/GameOptionProvider";
 import { FenProvider } from "./components/FenProvider";
 import PlayHumanManager from "./pages/PlayHuman/PlayHumanManager";
 import UnderDevelopment from "./pages/UnderDevelopment";
+import { UserProvider } from "./components/UserProvider";
 
 const router = createBrowserRouter([
   {
@@ -107,11 +108,13 @@ const router = createBrowserRouter([
 
 export const App = () => {
   return (
-    <GameOptionsProvider>
-      <FenProvider>
-        <RouterProvider router={router} />
-        <Toaster />
-      </FenProvider>
-    </GameOptionsProvider>
+    <UserProvider>
+      <GameOptionsProvider>
+        <FenProvider>
+          <RouterProvider router={router} />
+          <Toaster />
+        </FenProvider>
+      </GameOptionsProvider>
+    </UserProvider>
   );
 };

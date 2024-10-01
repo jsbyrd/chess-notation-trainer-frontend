@@ -1,5 +1,7 @@
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
+import { useUser } from "./UserProvider";
+import NavbarDrawer from "./Navbar/NavbarDrawer";
 
 const useStyles = createUseStyles({
   header: {
@@ -17,13 +19,17 @@ const useStyles = createUseStyles({
 
 const Header = () => {
   const classes = useStyles();
+  const { username } = useUser();
 
   return (
     <header className={classes.header}>
-      <div className={`${classes.appName} my-3 text-2xl`}>
+      <div className="block md:hidden">
+        <NavbarDrawer />
+      </div>
+      <div className={`${classes.appName} my-3 text-2xl hidden md:flex`}>
         <Link to="/">NotationChess</Link>
       </div>
-      <div>placeholder</div>
+      <div>{username}</div>
     </header>
   );
 };
