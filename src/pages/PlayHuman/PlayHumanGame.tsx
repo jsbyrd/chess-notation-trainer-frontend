@@ -31,6 +31,8 @@ import {
   getEndGameMessage,
   getEndGameState,
 } from "@/utils/endGameUtils";
+import { isMobile } from "@/utils/isMobile";
+import { TouchBackend } from "react-dnd-touch-backend";
 
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -179,7 +181,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
         </Button>
       </form>
 
-      <div className={`mb-6 w-[60%]`}>
+      <div className="mb-6 w-full sm:w-[80%] lg:w-[70%]">
         <Chessboard
           id="NotationTrainer"
           position={position ?? defaultFen}
@@ -191,6 +193,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
           arePiecesDraggable={isActiveGame && activeColor === playerColor}
           onPieceDrop={handleMoveDrop}
           onPromotionPieceSelect={handlePromotion}
+          customDndBackend={isMobile() ? TouchBackend : undefined}
         />
       </div>
       <div className="flex justify-center space-x-4">

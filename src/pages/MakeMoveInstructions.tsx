@@ -56,7 +56,7 @@ const MakeMoveInstructions = () => {
         </p>
       </div>
 
-      <div className="mb-6 w-[480px]">
+      <div className="mb-6 w-[60%]">
         <Chessboard
           id="NotationTrainer"
           showBoardNotation={showCoordinates}

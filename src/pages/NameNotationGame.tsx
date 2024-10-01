@@ -20,11 +20,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile } from "@/utils/isMobile";
 
 const INCORRECT_ANSWER_COLOR = "#dc2626";
 const CORRECT_ANSWER_COLOR = "#16a34a";
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-const MAX_TIME = 60;
+const MAX_TIME = 600;
 
 const NameNotationGame = () => {
   const gameOptions = useGameOptions();
@@ -44,7 +46,6 @@ const NameNotationGame = () => {
   );
   const [userAnswerColor, setUserAnswerColor] = useState("black");
   const isTimed = gameOptions.isTimed;
-  // const isTimed = false;
 
   const generateNextPosition = () => {
     const randomPosition = fen.getRandomPosition(gameOptions.color);
@@ -159,7 +160,7 @@ const NameNotationGame = () => {
     <div className="flex flex-col items-center container mx-auto px-4 py-8 max-w-3xl">
       <h1 className="text-3xl font-bold text-center">Name that Notation</h1>
 
-      <div className="flex justify-evenly align-center container mx-auto px-4 my-4 max-w-3xl">
+      <div className="flex flex-wrap gap-4 justify-evenly align-center container mx-auto px-4 my-4 max-w-3xl">
         <div className="text-2xl">
           Score: {score} / {total}
         </div>
@@ -171,7 +172,7 @@ const NameNotationGame = () => {
 
       <form
         onSubmit={handleAnswerSubmission}
-        className="flex gap-1 align-center w-[85%] mx-auto px-4 pb-4 max-w-3xl"
+        className="flex gap-1 align-center w-full sm:w-[80%] lg:w-[70%] mx-auto mb-4 max-w-3xl"
       >
         <Input
           className="flex-1 basis-10/12"
@@ -197,7 +198,7 @@ const NameNotationGame = () => {
         </Button>
       </form>
 
-      <div className="mb-6 w-[80%]">
+      <div className="mb-6 w-full sm:w-[80%] lg:w-[70%]">
         <Chessboard
           id="NotationTrainer"
           position={position ?? defaultFen}
@@ -208,6 +209,7 @@ const NameNotationGame = () => {
           }}
           customArrows={customArrows ?? ([] as Arrow[])}
           arePiecesDraggable={false}
+          customDndBackend={isMobile() ? TouchBackend : undefined}
         />
         {isTimed && <Progress value={(time * 100) / MAX_TIME} />}
       </div>

@@ -29,6 +29,8 @@ import {
   getEndGameState,
 } from "@/utils/endGameUtils";
 import { useToast } from "@/hooks/use-toast";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile } from "@/utils/isMobile";
 
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -197,7 +199,7 @@ const PlayBot = () => {
 
       <form
         onSubmit={handleAnswerSubmission}
-        className="flex gap-2 align-center w-[85%] mx-auto px-4 pb-4 max-w-3xl"
+        className="flex gap-2 align-center w-full sm:w-[80%] lg:w-[70%] mx-auto mb-4 max-w-3xl"
       >
         <Input
           className="flex-1 basis-10/12"
@@ -216,7 +218,7 @@ const PlayBot = () => {
         </Button>
       </form>
 
-      <div className="mb-6 w-[80%]">
+      <div className="touch-none mb-6 w-full sm:w-[80%] lg:w-[70%]">
         <Chessboard
           id="NotationTrainer"
           position={position ?? defaultFen}
@@ -225,9 +227,13 @@ const PlayBot = () => {
           customBoardStyle={{
             marginBottom: "20px",
           }}
+          customDndBackend={isMobile() ? TouchBackend : undefined}
           arePiecesDraggable={isActiveGame}
           onPieceDrop={handleMoveDrop}
           onPromotionPieceSelect={handlePromotion}
+          onPieceDragBegin={() => {
+            console.log("hi world!");
+          }}
         />
       </div>
 

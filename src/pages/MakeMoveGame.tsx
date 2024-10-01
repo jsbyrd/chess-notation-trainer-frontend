@@ -19,6 +19,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile } from "@/utils/isMobile";
 
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const MAX_TIME = 60;
@@ -161,20 +163,21 @@ const MakeMoveInstructions = () => {
 
   return (
     <div className="flex flex-col items-center container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold text-center">Make That Move</h1>
+      <h1 className="text-3xl font-bold text-center mb-2">
+        Make That Move: {move}
+      </h1>
 
-      <div className="flex justify-evenly align-center container mx-auto px-4 py-8 max-w-3xl">
+      <div className="flex flex-wrap gap-4 justify-evenly align-center container mx-auto px-4 py-2 max-w-3xl">
         <div className="text-2xl">
           Score: {score} / {total}
         </div>
         <div className="text-2xl">Color: {orientation.toUpperCase()}</div>
-        <div className="text-2xl">Move: {move}</div>
         {isTimed && (
           <div className="text-2xl">Time Left: {Math.ceil(time)}</div>
         )}
       </div>
 
-      <div className="mb-6 w-[80%]">
+      <div className="mb-6 w-full sm:w-[80%] lg:w-[70%]">
         <Chessboard
           id="NotationTrainer"
           position={position ?? defaultFen}
@@ -183,6 +186,7 @@ const MakeMoveInstructions = () => {
           customBoardStyle={{ marginBottom: "20px" }}
           onPieceDrop={handleMoveDrop}
           customArrows={showCustomArrows ? customArrows : ([] as Arrow[])}
+          customDndBackend={isMobile() ? TouchBackend : undefined}
         />
         {isTimed && <Progress value={(time * 100) / MAX_TIME} />}
       </div>
