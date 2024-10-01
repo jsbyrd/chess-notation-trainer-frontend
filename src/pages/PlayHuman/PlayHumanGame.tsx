@@ -42,19 +42,36 @@ type PlayHumanGameProps = {
   opponentName: string | undefined;
   playerColor: string;
   gameId: string | undefined;
+  endGameMessage: string;
+  handleEndGameMessageChange: (endGameMessage: string) => void;
 };
 
 const PlayHumanGame = (props: PlayHumanGameProps) => {
-  const { move, username, opponentName, playerColor, gameId } = props;
+  const {
+    move,
+    username,
+    opponentName,
+    playerColor,
+    gameId,
+    endGameMessage,
+    handleEndGameMessageChange,
+  } = props;
   const { toast } = useToast();
   const gameOptions = useGameOptions();
   const navigate = useNavigate();
   const [position, setPosition] = useState<string>(defaultFen);
   const [userAnswer, setUserAnswer] = useState("");
-  const [endGameMessage, setEndGameMessage] = useState("");
+  // const [endGameMessage, setEndGameMessage] = useState("");
   const [activeColor, setActiveColor] = useState<BoardOrientation>("white");
   const [showPopup, setShowPopup] = useState(false);
   const [isActiveGame, setIsActiveGame] = useState(true);
+
+  useEffect(() => {
+    console.log("hey this worked!");
+    if (endGameMessage !== "") {
+      setShowPopup(true);
+    }
+  }, [endGameMessage]);
 
   // When we receive a move from websockets, update board state
   useEffect(() => {
@@ -70,10 +87,10 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
     const endGameState = getEndGameState(updatedGameState);
     if (endGameState !== EndGameState.ACTIVE_GAME) {
       setIsActiveGame(false);
-      setEndGameMessage(
+      handleEndGameMessageChange(
         getEndGameMessage(endGameState, playerColor === activeColor)
       );
-      setShowPopup(true);
+      // setShowPopup(true);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

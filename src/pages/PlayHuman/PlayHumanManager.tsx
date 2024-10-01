@@ -21,8 +21,9 @@ const PlayHumanManager = () => {
   const { username } = useUser();
   const [gameState, setGameState] = useState<GameState>(DEFAULT_GAME_STATE);
   const [colorPreference, setColorPreference] = useState("random");
-  const [gameId, setGameId] = useState<string | undefined>("test");
+  const [gameId, setGameId] = useState<string | undefined>("");
   const [move, setMove] = useState<string | undefined>(undefined);
+  const [endGameMessage, setEndGameMessage] = useState("");
   const [opponentName, setOpponentName] = useState<string | undefined>(
     undefined
   );
@@ -40,8 +41,16 @@ const PlayHumanManager = () => {
       console.log("connecting to the game");
       const socket = new SockJS(SOCKET_URL + "/chess-game");
       const stompClient = Stomp.over(socket);
-      stompClient.connect({}, function (frame) {
+      stompClient.connect({}, (frame) => {
+        // Tell username to server
+        stompClient.send(
+          "/app/game.addUser",
+          {},
+          JSON.stringify({ playerId: username, gameId: gameId ?? "" })
+        );
         console.log("connected to the frame: " + frame);
+
+        // Subscribe to appropriate game
         stompClient.subscribe(
           "/topic/game-progress/" + gameId,
           function (response) {
@@ -58,6 +67,15 @@ const PlayHumanManager = () => {
               if (username === data.player1Id) setOpponentName(data.player2Id);
               else setOpponentName(data.player1Id);
             }
+          }
+        );
+
+        // Subscribe to opponent disconnect notifications
+        stompClient.subscribe(
+          "/topic/game-disconnect/" + username,
+          function (message) {
+            setEndGameMessage(message.body);
+            alert(message.body); // Notify the player that their opponent has disconnected
           }
         );
       });
@@ -97,6 +115,10 @@ const PlayHumanManager = () => {
     setGameState(res.gameState);
   }, [gameId, handleSocketConnection, username]);
 
+  const handleEndGameMessageChange = (endGameMessage: string) => {
+    setEndGameMessage(endGameMessage);
+  };
+
   const renderAppropriatePage = useCallback(() => {
     switch (gameState) {
       case "ACTIVE":
@@ -107,6 +129,8 @@ const PlayHumanManager = () => {
             opponentName={opponentName}
             playerColor={colorPreference}
             gameId={gameId}
+            endGameMessage={endGameMessage}
+            handleEndGameMessageChange={handleEndGameMessageChange}
           />
         );
       case "WAITING":
@@ -119,6 +143,8 @@ const PlayHumanManager = () => {
             opponentName={opponentName}
             playerColor={colorPreference}
             gameId={gameId}
+            endGameMessage={endGameMessage}
+            handleEndGameMessageChange={handleEndGameMessageChange}
           />
         );
       case "SETTINGS":
@@ -151,6 +177,7 @@ const PlayHumanManager = () => {
     opponentName,
     colorPreference,
     gameId,
+    endGameMessage,
     handleJoinGame,
     handleCreateGame,
   ]);
