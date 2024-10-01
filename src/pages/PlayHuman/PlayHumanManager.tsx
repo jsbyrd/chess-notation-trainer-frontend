@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   createGame,
   joinGame,
@@ -10,6 +10,7 @@ import PlayHumanSettings from "./PlayHumanSettings";
 import PlayHumanWaiting from "./PlayHumanWaiting";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
+import { useUser } from "@/components/UserProvider";
 
 type GameState = "ACTIVE" | "WAITING" | "ENDED" | "SETTINGS";
 
@@ -17,6 +18,7 @@ const DEFAULT_GAME_STATE = "SETTINGS";
 const SOCKET_URL = "http://localhost:8080"; // TODO: Replace with ENV variable
 
 const PlayHumanManager = () => {
+  const { username } = useUser();
   const [gameState, setGameState] = useState<GameState>(DEFAULT_GAME_STATE);
   const [colorPreference, setColorPreference] = useState("random");
   const [gameId, setGameId] = useState<string | undefined>("test");
@@ -32,18 +34,6 @@ const PlayHumanManager = () => {
   const handleGameIdChange = (gameId: string) => {
     setGameId(gameId);
   };
-
-  const generateRandomUsername = (length: number) => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "*";
-    for (let i = 1; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
-  const username = useMemo(() => generateRandomUsername(8), []);
 
   const handleSocketConnection = useCallback(
     (gameId: string) => {

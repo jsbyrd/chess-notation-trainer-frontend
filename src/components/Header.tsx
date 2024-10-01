@@ -1,4 +1,3 @@
-import React from "react";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
 
@@ -16,7 +15,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header: React.FC = () => {
+const Header = () => {
   const classes = useStyles();
 
   return (
