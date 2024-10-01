@@ -8,17 +8,17 @@ import Error from "./pages/Error";
 import Learn from "./pages/Learn";
 import MakeMoveInstructions from "./pages/MakeMoveInstructions";
 import Analytics from "./pages/Analytics";
-import PlayHuman from "./pages/PlayHuman";
 import PlayBot from "./pages/PlayBot";
-import { FenProvider } from "./components/FenProvider";
 import Settings from "./pages/Settings";
 import ReportBug from "./pages/ReportBug";
 import MakeMoveGame from "./pages/MakeMoveGame";
-import { GameOptionsProvider } from "./components/GameOptionProvider";
 import NameNotationInstructions from "./pages/NameNotationInstructions";
 import NameNotationGame from "./pages/NameNotationGame";
 import PlayBotInstructions from "./pages/PlayBotInstructions";
 import { Toaster } from "./components/ui/toaster";
+import { GameOptionsProvider } from "./components/GameOptionProvider";
+import { FenProvider } from "./components/FenProvider";
+import PlayHumanManager from "./pages/PlayHuman/PlayHumanManager";
 
 const router = createBrowserRouter([
   {
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/play-human",
-        element: <PlayHuman />,
+        element: <PlayHumanManager />,
       },
       {
         path: "/play-bot",
