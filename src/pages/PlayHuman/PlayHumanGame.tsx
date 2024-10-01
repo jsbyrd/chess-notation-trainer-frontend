@@ -33,6 +33,7 @@ import {
 } from "@/utils/endGameUtils";
 import { isMobile } from "@/utils/isMobile";
 import { TouchBackend } from "react-dnd-touch-backend";
+import { GameState } from "./PlayHumanManager";
 
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -44,6 +45,7 @@ type PlayHumanGameProps = {
   gameId: string | undefined;
   endGameMessage: string;
   handleEndGameMessageChange: (endGameMessage: string) => void;
+  handleGameStateChange: (gameState: GameState) => void;
 };
 
 const PlayHumanGame = (props: PlayHumanGameProps) => {
@@ -55,6 +57,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
     gameId,
     endGameMessage,
     handleEndGameMessageChange,
+    handleGameStateChange,
   } = props;
   const { toast } = useToast();
   const gameOptions = useGameOptions();
@@ -124,7 +127,16 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
       move: userAnswer,
     };
 
-    await makeMove(reqBody);
+    const res = await makeMove(reqBody);
+
+    if (res.error) {
+      toast({
+        title: "Error!",
+        description: res.error,
+        variant: "destructive",
+      });
+      return;
+    }
   };
 
   const handleMoveDrop = async (
@@ -149,7 +161,16 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
         move: moveMade,
       };
 
-      await makeMove(reqBody);
+      const res = await makeMove(reqBody);
+
+      if (res.error) {
+        toast({
+          title: "Error!",
+          description: res.error,
+          variant: "destructive",
+        });
+        return false;
+      }
 
       return true;
     } catch {
@@ -233,7 +254,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
               Play Again
             </AlertDialogAction> */}
             <AlertDialogAction
-              onClick={() => navigate("/play-bot/instructions")}
+              onClick={() => handleGameStateChange("SETTINGS")}
             >
               Back to Game Settings
             </AlertDialogAction>

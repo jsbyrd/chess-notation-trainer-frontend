@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   createGame,
   joinGame,
@@ -11,8 +11,9 @@ import PlayHumanWaiting from "./PlayHumanWaiting";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import { useUser } from "@/components/UserProvider";
+import { toast } from "@/hooks/use-toast";
 
-type GameState = "ACTIVE" | "WAITING" | "ENDED" | "SETTINGS";
+export type GameState = "ACTIVE" | "WAITING" | "ENDED" | "SETTINGS";
 
 const DEFAULT_GAME_STATE = "SETTINGS";
 const SOCKET_URL = "http://localhost:8080"; // TODO: Replace with ENV variable
@@ -27,6 +28,23 @@ const PlayHumanManager = () => {
   const [opponentName, setOpponentName] = useState<string | undefined>(
     undefined
   );
+  const [gameStompClient, setGameStompClient] = useState<
+    Stomp.Client | undefined
+  >(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (gameStompClient) {
+        gameStompClient.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+        });
+      }
+    };
+  }, [gameStompClient]);
+
+  const handleGameStateChange = (gameState: GameState) => {
+    setGameState(gameState);
+  };
 
   const handleColorChange = (color: string) => {
     setColorPreference(color);
@@ -75,10 +93,10 @@ const PlayHumanManager = () => {
           "/topic/game-disconnect/" + username,
           function (message) {
             setEndGameMessage(message.body);
-            alert(message.body); // Notify the player that their opponent has disconnected
           }
         );
       });
+      setGameStompClient(stompClient);
     },
     [gameState, opponentName, username]
   );
@@ -95,6 +113,16 @@ const PlayHumanManager = () => {
     };
 
     const res = await createGame(reqBody);
+
+    if (res.error) {
+      toast({
+        title: "Error!",
+        description: res.error,
+        variant: "destructive",
+      });
+      return;
+    }
+
     handleSocketConnection(res.gameId);
     setGameId(res.gameId);
     setGameState("WAITING");
@@ -107,6 +135,15 @@ const PlayHumanManager = () => {
     };
 
     const res = await joinGame(reqBody);
+
+    if (res.error) {
+      toast({
+        title: "Error!",
+        description: res.error,
+        variant: "destructive",
+      });
+      return;
+    }
 
     handleSocketConnection(gameId ?? "");
     setOpponentName(res.player1Id);
@@ -131,6 +168,7 @@ const PlayHumanManager = () => {
             gameId={gameId}
             endGameMessage={endGameMessage}
             handleEndGameMessageChange={handleEndGameMessageChange}
+            handleGameStateChange={handleGameStateChange}
           />
         );
       case "WAITING":
@@ -145,6 +183,7 @@ const PlayHumanManager = () => {
             gameId={gameId}
             endGameMessage={endGameMessage}
             handleEndGameMessageChange={handleEndGameMessageChange}
+            handleGameStateChange={handleGameStateChange}
           />
         );
       case "SETTINGS":
