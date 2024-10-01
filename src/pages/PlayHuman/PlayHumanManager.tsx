@@ -76,12 +76,16 @@ const PlayHumanManager = () => {
   );
 
   const handleCreateGame = useCallback(async () => {
-    // TODO: Handle "random" selection
+    let color = colorPreference;
+    if (color === "random") {
+      color = Math.random() < 0.5 ? "white" : "black";
+    }
+
     const reqBody: CreateGameRequestDTO = {
       playerId: username,
-      color: colorPreference,
+      color: color,
     };
-    console.log(reqBody.color);
+
     const res = await createGame(reqBody);
     handleSocketConnection(res.gameId);
     setGameId(res.gameId);
@@ -93,17 +97,15 @@ const PlayHumanManager = () => {
       gameId: gameId ?? "",
       playerId: username,
     };
-    console.log(gameId);
+
     const res = await joinGame(reqBody);
-    console.log(res);
+
     handleSocketConnection(gameId ?? "");
     setOpponentName(res.player1Id);
     setColorPreference(res.player2Color);
     setGameId(res.gameId);
     setGameState(res.gameState);
   }, [gameId, handleSocketConnection, username]);
-
-  console.log(colorPreference);
 
   const renderAppropriatePage = useCallback(() => {
     switch (gameState) {

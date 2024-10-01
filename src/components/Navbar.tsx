@@ -104,12 +104,12 @@ const Navbar = () => {
         </Link>
       </div>
       <div className={`${classes.navSectionContainer}`}>
-        <Link to="settings">
+        <Link to="/settings">
           <div className={`${classes.navElement} ${classes.clickableElement}`}>
             Settings
           </div>
         </Link>
-        <Link to="report-bug">
+        <Link to="/report-bug">
           <div className={`${classes.navElement} ${classes.clickableElement}`}>
             Report Bug
           </div>

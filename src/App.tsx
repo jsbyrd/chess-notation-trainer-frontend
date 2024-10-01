@@ -19,6 +19,7 @@ import { Toaster } from "./components/ui/toaster";
 import { GameOptionsProvider } from "./components/GameOptionProvider";
 import { FenProvider } from "./components/FenProvider";
 import PlayHumanManager from "./pages/PlayHuman/PlayHumanManager";
+import UnderDevelopment from "./pages/UnderDevelopment";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: "analytics",
-        element: <Analytics />,
+        element: <UnderDevelopment />,
       },
       {
         path: "/make-move",
@@ -86,11 +87,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/settings",
-        element: <Settings />,
+        element: <UnderDevelopment />,
       },
       {
         path: "report-bug",
-        element: <ReportBug />,
+        element: <UnderDevelopment />,
       },
     ],
   },

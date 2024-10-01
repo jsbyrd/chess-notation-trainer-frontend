@@ -30,7 +30,7 @@ export const createGame = async (body: CreateGameRequestDTO) => {
     }
 
     const json = await response.json();
-    console.log(json);
+
     return json;
   } catch (error) {
     console.error(error.message);
@@ -51,7 +51,7 @@ export const joinGame = async (body: JoinGameRequestDTO) => {
     }
 
     const json = await response.json();
-    console.log(json);
+
     return json;
   } catch (error) {
     console.error(error.message);
@@ -72,7 +72,7 @@ export const makeMove = async (body: MakeMoveDTO) => {
     }
 
     const json = await response.json();
-    console.log(json);
+
     return json;
   } catch (error) {
     console.error(error.message);

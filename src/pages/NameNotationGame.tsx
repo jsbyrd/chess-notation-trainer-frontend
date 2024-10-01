@@ -56,7 +56,6 @@ const NameNotationGame = () => {
 
   useEffect(() => {
     generateNextPosition();
-    console.log("hi");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

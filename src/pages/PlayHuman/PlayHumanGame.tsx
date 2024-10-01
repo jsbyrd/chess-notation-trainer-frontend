@@ -105,8 +105,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
       move: userAnswer,
     };
 
-    const res = await makeMove(reqBody);
-    console.log(res);
+    await makeMove(reqBody);
   };
 
   const handleMoveDrop = async (
@@ -123,8 +122,6 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
         promotion: promotionPiece ? promotionPiece[1].toLowerCase() : "q",
       });
 
-      console.log("gameId", gameId);
-
       const moveMade = newGameState.history()[0];
 
       const reqBody: MakeMoveDTO = {
@@ -133,8 +130,8 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
         move: moveMade,
       };
 
-      const res = await makeMove(reqBody);
-      console.log(res);
+      await makeMove(reqBody);
+
       return true;
     } catch {
       return false;
