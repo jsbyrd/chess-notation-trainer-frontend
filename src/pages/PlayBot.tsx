@@ -240,7 +240,7 @@ const PlayBot = () => {
       <div className="flex justify-center space-x-4">
         <Button
           onClick={() => {
-            navigate("/make-move/instructions");
+            navigate("/play-bot/instructions");
           }}
         >
           Return to Instructions

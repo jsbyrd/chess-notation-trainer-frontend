@@ -16,7 +16,7 @@ import { toast } from "@/hooks/use-toast";
 export type GameState = "ACTIVE" | "WAITING" | "ENDED" | "SETTINGS";
 
 const DEFAULT_GAME_STATE = "SETTINGS";
-const SOCKET_URL = "http://localhost:8080"; // TODO: Replace with ENV variable
+const SOCKET_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 const PlayHumanManager = () => {
   const { username } = useUser();
@@ -31,6 +31,8 @@ const PlayHumanManager = () => {
   const [gameStompClient, setGameStompClient] = useState<
     Stomp.Client | undefined
   >(undefined);
+
+  console.log(SOCKET_URL);
 
   useEffect(() => {
     return () => {

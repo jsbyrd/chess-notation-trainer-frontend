@@ -217,7 +217,7 @@ const NameNotationGame = () => {
       <div className="flex justify-center space-x-4 my-6">
         <Button
           onClick={() => {
-            navigate("/make-move/instructions");
+            navigate("/name-notation/instructions");
           }}
         >
           Return to Instructions
@@ -240,7 +240,7 @@ const NameNotationGame = () => {
               Restart Game
             </AlertDialogAction>
             <AlertDialogAction
-              onClick={() => navigate("/make-move/instructions")}
+              onClick={() => navigate("/name-notation/instructions")}
             >
               Back to Instructions
             </AlertDialogAction>

@@ -237,7 +237,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
       <div className="flex justify-center space-x-4">
         <Button
           onClick={() => {
-            navigate("/make-move/instructions");
+            handleGameStateChange("SETTINGS");
           }}
         >
           Return to Instructions

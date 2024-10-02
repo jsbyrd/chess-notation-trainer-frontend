@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080"; // TODO: Replace with env var
+const BASE_URL = import.meta.env.BACKEND_BASE_URL;
 
 export interface CreateGameRequestDTO {
   playerId: string;

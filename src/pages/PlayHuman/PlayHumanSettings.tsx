@@ -77,7 +77,7 @@ const PlayHumanSettings = (props: PlayHumanSettingsProps) => {
                 <Input
                   type="text"
                   id="gameId"
-                  placeholder="Enter game ID"
+                  placeholder="####-####-####"
                   value={gameId}
                   onChange={(e) => handleGameIdChange(e.target.value)}
                   className="w-full"

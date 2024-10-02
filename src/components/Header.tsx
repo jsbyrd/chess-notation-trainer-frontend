@@ -2,6 +2,8 @@ import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
 import { useUser } from "./UserProvider";
 import NavbarDrawer from "./Navbar/NavbarDrawer";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { defaultPfp } from "@/assets";
 
 const useStyles = createUseStyles({
   header: {
@@ -14,6 +16,10 @@ const useStyles = createUseStyles({
   appName: {
     fontSize: "1.5rem",
     fontWeight: "bold",
+  },
+  userInfo: {
+    display: "flex",
+    alignItems: "center",
   },
 });
 
@@ -29,7 +35,13 @@ const Header = () => {
       <div className={`${classes.appName} my-3 text-2xl hidden md:flex`}>
         <Link to="/">NotationChess</Link>
       </div>
-      <div>{username}</div>
+      <div className={classes.userInfo}>
+        <div className="mr-4">{username}</div>
+        <Avatar>
+          <AvatarImage src={defaultPfp} alt="*U" />
+          <AvatarFallback>{username ? username.charAt(0) : "U"}</AvatarFallback>
+        </Avatar>
+      </div>
     </header>
   );
 };
