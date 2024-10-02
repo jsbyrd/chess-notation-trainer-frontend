@@ -33,7 +33,9 @@ export const createGame = async (body: CreateGameRequestDTO) => {
 
     return json;
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
   }
 };
 
@@ -54,7 +56,9 @@ export const joinGame = async (body: JoinGameRequestDTO) => {
 
     return json;
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
   }
 };
 
@@ -75,6 +79,8 @@ export const makeMove = async (body: MakeMoveDTO) => {
 
     return json;
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
   }
 };

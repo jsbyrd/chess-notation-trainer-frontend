@@ -70,7 +70,7 @@ const PlayHumanManager = () => {
         stompClient.subscribe(
           "/topic/game-progress/" + gameId,
           function (response) {
-            let data = JSON.parse(response.body);
+            const data = JSON.parse(response.body);
             // if (!data.gameId) setGameId(data.gameId);
             // Update Game State
             if (data.gameState && data.gameState !== gameState)
