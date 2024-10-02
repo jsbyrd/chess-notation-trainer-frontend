@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Button } from "@/components/ui/button";
 import { useGameOptions } from "@/components/GameOptionProvider";
-import { useNavigate } from "react-router-dom";
 import { Chess } from "chess.js";
 import {
   BoardOrientation,
@@ -61,7 +60,6 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
   } = props;
   const { toast } = useToast();
   const gameOptions = useGameOptions();
-  const navigate = useNavigate();
   const [position, setPosition] = useState<string>(defaultFen);
   const [userAnswer, setUserAnswer] = useState("");
   // const [endGameMessage, setEndGameMessage] = useState("");
@@ -70,7 +68,6 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
   const [isActiveGame, setIsActiveGame] = useState(true);
 
   useEffect(() => {
-    console.log("hey this worked!");
     if (endGameMessage !== "") {
       setShowPopup(true);
     }

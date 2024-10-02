@@ -231,9 +231,6 @@ const PlayBot = () => {
           arePiecesDraggable={isActiveGame}
           onPieceDrop={handleMoveDrop}
           onPromotionPieceSelect={handlePromotion}
-          onPieceDragBegin={() => {
-            console.log("hi world!");
-          }}
         />
       </div>
 

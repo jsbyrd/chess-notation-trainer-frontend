@@ -32,8 +32,6 @@ const PlayHumanManager = () => {
     Stomp.Client | undefined
   >(undefined);
 
-  console.log(SOCKET_URL);
-
   useEffect(() => {
     return () => {
       if (gameStompClient) {
@@ -58,24 +56,21 @@ const PlayHumanManager = () => {
 
   const handleSocketConnection = useCallback(
     (gameId: string) => {
-      console.log("connecting to the game");
       const socket = new SockJS(SOCKET_URL + "/chess-game");
       const stompClient = Stomp.over(socket);
-      stompClient.connect({}, (frame) => {
+      stompClient.connect({}, () => {
         // Tell username to server
         stompClient.send(
           "/app/game.addUser",
           {},
           JSON.stringify({ playerId: username, gameId: gameId ?? "" })
         );
-        console.log("connected to the frame: " + frame);
 
         // Subscribe to appropriate game
         stompClient.subscribe(
           "/topic/game-progress/" + gameId,
           function (response) {
             let data = JSON.parse(response.body);
-            console.log("Updating gameId", data.gameId);
             // if (!data.gameId) setGameId(data.gameId);
             // Update Game State
             if (data.gameState && data.gameState !== gameState)
