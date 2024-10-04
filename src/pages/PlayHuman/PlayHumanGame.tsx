@@ -40,6 +40,7 @@ type PlayHumanGameProps = {
   endGameMessage: string;
   handleEndGameMessageChange: (endGameMessage: string) => void;
   handleGameStateChange: (gameState: GameState) => void;
+  disconnectWebSocket: () => void;
 };
 
 const PlayHumanGame = (props: PlayHumanGameProps) => {
@@ -52,6 +53,7 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
     endGameMessage,
     handleEndGameMessageChange,
     handleGameStateChange,
+    disconnectWebSocket,
   } = props;
   const { toast } = useToast();
   const gameOptions = useGameOptions();
@@ -65,7 +67,10 @@ const PlayHumanGame = (props: PlayHumanGameProps) => {
   useEffect(() => {
     if (endGameMessage !== "") {
       setShowPopup(true);
+      // End the game connection (currently, no "rematch" feature is planned)
+      disconnectWebSocket();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endGameMessage]);
 
   // When we receive a move from websockets, update board state

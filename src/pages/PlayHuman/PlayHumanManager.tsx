@@ -32,14 +32,19 @@ const PlayHumanManager = () => {
     Stomp.Client | undefined
   >(undefined);
 
+  const disconnectWebSocket = () => {
+    if (gameStompClient) {
+      gameStompClient.disconnect(() => {});
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (gameStompClient) {
-        gameStompClient.disconnect(() => {
-          console.log("Disconnected from WebSocket");
-        });
+        disconnectWebSocket();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStompClient]);
 
   const handleGameStateChange = (gameState: GameState) => {
@@ -166,6 +171,7 @@ const PlayHumanManager = () => {
             endGameMessage={endGameMessage}
             handleEndGameMessageChange={handleEndGameMessageChange}
             handleGameStateChange={handleGameStateChange}
+            disconnectWebSocket={disconnectWebSocket}
           />
         );
       case "WAITING":
@@ -181,6 +187,7 @@ const PlayHumanManager = () => {
             endGameMessage={endGameMessage}
             handleEndGameMessageChange={handleEndGameMessageChange}
             handleGameStateChange={handleGameStateChange}
+            disconnectWebSocket={disconnectWebSocket}
           />
         );
       case "SETTINGS":
