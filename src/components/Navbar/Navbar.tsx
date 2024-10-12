@@ -5,7 +5,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../UserProvider";
+import { useToast } from "@/hooks/use-toast";
 
 const useStyles = createUseStyles({
   navContainer: {
@@ -52,6 +54,17 @@ const useStyles = createUseStyles({
 
 const Navbar = () => {
   const classes = useStyles();
+  const user = useUser();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = () => {
+    user.handleLogout();
+    toast({
+      title: "You have successfully signed out",
+    });
+    navigate("/login");
+  };
 
   return (
     <div className="hidden md:flex">
@@ -123,11 +136,23 @@ const Navbar = () => {
               Report Bug
             </div>
           </Link>
-          <div
-            className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
-          >
-            Sign Out
-          </div>
+          {user.isLoggedIn && (
+            <div
+              className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </div>
+          )}
+          {!user.isLoggedIn && (
+            <Link to="login">
+              <div
+                className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
+              >
+                Login / Register
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

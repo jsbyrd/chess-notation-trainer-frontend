@@ -10,7 +10,7 @@ const UnderDevelopment = () => {
       </h1>
 
       <h3 className="text-center font-bold px-4 pb-4">
-        In the meantime, feel free to check out these other cool features ;)
+        In the meantime, feel free to check out these other cool features
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

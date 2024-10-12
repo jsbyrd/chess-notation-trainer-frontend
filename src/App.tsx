@@ -3,7 +3,6 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Template from "./pages/Template";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Error from "./pages/Error";
 import Learn from "./pages/Learn";
 import MakeMoveInstructions from "./pages/MakeMoveInstructions";
@@ -94,15 +93,11 @@ const router = createBrowserRouter([
         path: "report-bug",
         element: <UnderDevelopment />,
       },
+      {
+        path: "/login",
+        element: <Login />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
   },
 ]);
 
