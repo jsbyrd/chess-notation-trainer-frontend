@@ -103,12 +103,29 @@ const Login = () => {
 
     // Handle bad requests
     if (res instanceof Error) {
-      toast({
-        title: res.message,
-        description:
-          "Something went wrong while trying to register your account. Please try again later.",
-        variant: "destructive",
-      });
+      // Figure out what kind of error this is
+      const errorMessage = res.message.split(" ");
+      console.log(errorMessage);
+      const statusCodeLocation = 3;
+
+      if (
+        errorMessage.length >= statusCodeLocation + 1 &&
+        errorMessage[statusCodeLocation] === "400"
+      ) {
+        toast({
+          title: res.message,
+          description: `The username '${registerUsername}' is already taken, please try another username.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: res.message,
+          description:
+            "Something went wrong while trying to register your account. Please try again later.",
+          variant: "destructive",
+        });
+      }
+
       return;
     }
 
@@ -116,7 +133,7 @@ const Login = () => {
     toast({
       title: "Your account has been successfully created!",
     });
-    user.handleLogin(loginUsername, loginPassword);
+    user.handleLogin(registerUsername, registerPassword);
     navigate("/");
   };
 
