@@ -10,7 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@/components/UserProvider";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] =
+    useState(false);
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
@@ -169,7 +172,7 @@ const Login = () => {
                 <div className="relative">
                   <Input
                     id="login-password"
-                    type={showPassword ? "text" : "password"}
+                    type={showLoginPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
@@ -177,11 +180,11 @@ const Login = () => {
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onMouseDown={() => setShowPassword(true)}
-                    onMouseUp={() => setShowPassword(false)}
-                    onMouseLeave={() => setShowPassword(false)}
+                    onMouseDown={() => setShowLoginPassword(true)}
+                    onMouseUp={() => setShowLoginPassword(false)}
+                    onMouseLeave={() => setShowLoginPassword(false)}
                   >
-                    {showPassword ? (
+                    {showLoginPassword ? (
                       <EyeOffIcon className="h-5 w-5 text-gray-500" />
                     ) : (
                       <EyeIcon className="h-5 w-5 text-gray-500" />
@@ -215,25 +218,55 @@ const Login = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="register-password">Password</Label>
-                <Input
-                  id="register-password"
-                  type="password"
-                  placeholder="Please don't put any real passwords"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="register-password"
+                    type={showRegisterPassword ? "text" : "password"}
+                    placeholder="Please don't put any real passwords"
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onMouseDown={() => setShowRegisterPassword(true)}
+                    onMouseUp={() => setShowRegisterPassword(false)}
+                    onMouseLeave={() => setShowRegisterPassword(false)}
+                  >
+                    {showRegisterPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="register-confirm-password">
                   Confirm Password
                 </Label>
-                <Input
-                  id="register-confirm-password"
-                  type="password"
-                  placeholder="Re-enter your password"
-                  value={registerConfirmPassword}
-                  onChange={(e) => setRegisterConfirmPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="register-confirm-password"
+                    type={showRegisterConfirmPassword ? "text" : "password"}
+                    placeholder="Re-enter your password"
+                    value={registerConfirmPassword}
+                    onChange={(e) => setRegisterConfirmPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onMouseDown={() => setShowRegisterConfirmPassword(true)}
+                    onMouseUp={() => setShowRegisterConfirmPassword(false)}
+                    onMouseLeave={() => setShowRegisterConfirmPassword(false)}
+                  >
+                    {showRegisterConfirmPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
               <Button type="submit" className="w-full">
                 Register
