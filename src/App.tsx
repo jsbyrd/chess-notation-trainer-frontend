@@ -36,8 +36,14 @@ const router = createBrowserRouter([
         element: <Learn />,
       },
       {
-        path: "analytics",
-        element: <UnderDevelopment />,
+        path: "/analytics",
+        element: <Outlet />,
+        children: [
+          {
+            path: "/analytics",
+            element: <Analytics />,
+          },
+        ],
       },
       {
         path: "/make-move",
