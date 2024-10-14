@@ -22,19 +22,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isMobile } from "@/utils/isMobile";
+import { useUser } from "@/components/UserProvider";
+import { createNnAnalytics } from "@/services/nnAnalyticsService";
 
 const INCORRECT_ANSWER_COLOR = "#dc2626";
 const CORRECT_ANSWER_COLOR = "#16a34a";
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-const MAX_TIME = 600;
+const MAX_TIME = 60;
 
 const NameNotationGame = () => {
+  const user = useUser();
   const gameOptions = useGameOptions();
   const fen = useFen();
   const navigate = useNavigate();
   const [time, setTime] = useState(MAX_TIME);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const [skips, setSkips] = useState(0);
   const [position, setPosition] = useState<string | undefined>(undefined);
   const [move, setMove] = useState("");
   const [userAnswer, setUserAnswer] = useState("");
@@ -62,22 +66,48 @@ const NameNotationGame = () => {
 
   useEffect(() => {
     if (!isActiveGame || !isTimed) return;
-    // Set an interval to decrease the count every second (1000 ms)
-    const interval = setInterval(() => {
+
+    const handleInterval = () => {
       setTime((prevTime) => {
         if (prevTime <= 0.1) {
-          clearInterval(interval); // Stop the countdown when it reaches 0
+          clearInterval(interval);
           setShowPopup(true);
           setIsActiveGame(false);
           return 0;
         }
         return prevTime - 0.1;
       });
-    }, 100);
+    };
+
+    const interval = setInterval(handleInterval, 100);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActiveGame]);
+  }, [isActiveGame, isTimed]);
+
+  // Create NnAnalytics when game is over
+  useEffect(() => {
+    const handleCreateNnAnalytics = async () => {
+      if (time === 0 && user.isLoggedIn) {
+        await createNnAnalytics(
+          user.username,
+          user.password,
+          score,
+          total,
+          skips
+        );
+      }
+    };
+
+    handleCreateNnAnalytics();
+  }, [
+    time,
+    user.isLoggedIn,
+    score,
+    total,
+    skips,
+    user.username,
+    user.password,
+  ]);
 
   // Returns true if it involves a check, checkmate, or castling
   const isSpecialMove = (move: string) => {
@@ -113,6 +143,7 @@ const NameNotationGame = () => {
     generateNextPosition();
     setScore(0);
     setTotal(0);
+    setSkips(0);
     setTime(MAX_TIME);
     setIsActiveGame(true);
   };
@@ -148,6 +179,7 @@ const NameNotationGame = () => {
 
   const handleSkipPosition = () => {
     setTotal(total + 1);
+    setSkips(skips + 1);
     setUserAnswerColor(INCORRECT_ANSWER_COLOR);
     setTimeout(() => {
       generateNextPosition();

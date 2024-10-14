@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createUseStyles } from "react-jss";
 import { FiMenu } from "react-icons/fi";
 import {
@@ -15,6 +15,8 @@ import {
   SheetClose,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useUser } from "../UserProvider";
+import { useToast } from "@/hooks/use-toast";
 
 const useStyles = createUseStyles({
   appName: {
@@ -67,6 +69,30 @@ const useStyles = createUseStyles({
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const classes = useStyles();
+  const user = useUser();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleGoToAnalytics = () => {
+    if (!user.isLoggedIn) {
+      toast({
+        title: "Error!",
+        description: "You must be logged in to view analytics.",
+        variant: "destructive",
+      });
+      navigate("/");
+    } else {
+      navigate("/analytics");
+    }
+  };
+
+  const handleSignOut = () => {
+    user.handleLogout();
+    toast({
+      title: "You have successfully signed out",
+    });
+    navigate("/login");
+  };
 
   return (
     <div>
@@ -143,15 +169,14 @@ const Navbar = () => {
                     </div>
                   </SheetClose>
                 </Link>
-                <Link to="/analytics">
-                  <SheetClose asChild>
-                    <div
-                      className={`${classes.navElement} ${classes.clickableElement}`}
-                    >
-                      Analytics
-                    </div>
-                  </SheetClose>
-                </Link>
+                <SheetClose asChild>
+                  <div
+                    className={`${classes.navElement} ${classes.clickableElement}`}
+                    onClick={handleGoToAnalytics}
+                  >
+                    Analytics
+                  </div>
+                </SheetClose>
               </div>
               <div className={`${classes.navSectionContainer}`}>
                 <Link to="/settings">
@@ -173,11 +198,22 @@ const Navbar = () => {
                   </SheetClose>
                 </Link>
                 <SheetClose asChild>
-                  <div
-                    className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
-                  >
-                    Sign Out
-                  </div>
+                  {user.isLoggedIn ? (
+                    <div
+                      className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </div>
+                  ) : (
+                    <Link to="login">
+                      <div
+                        className={`${classes.navElement} ${classes.clickableElement} mb-[40px]`}
+                      >
+                        Login / Register
+                      </div>
+                    </Link>
+                  )}
                 </SheetClose>
               </div>
             </div>

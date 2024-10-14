@@ -1,17 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   AreaChart,
   Area,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import {
   Table,
@@ -22,92 +21,37 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { useUser } from "@/components/UserProvider";
+import {
+  getMmAnalyticsByUsername,
+  MmAnalyticsResponse,
+} from "@/services/mmAnalyticsService";
+import {
+  getNnAnalyticsByUsername,
+  NnAnalyticsResponse,
+} from "@/services/nnAnalyticsService";
 
-// Mock data - replace with your actual data
-const gameMode1Data = [
-  {
-    game: 1,
-    date: "2024-10-01",
-    rawScore: 80,
-    totalAttempts: 100,
-    accuracy: 80,
-  },
-  {
-    game: 2,
-    date: "2024-10-02",
-    rawScore: 85,
-    totalAttempts: 100,
-    accuracy: 85,
-  },
-  {
-    game: 3,
-    date: "2024-10-03",
-    rawScore: 90,
-    totalAttempts: 100,
-    accuracy: 90,
-  },
-  {
-    game: 4,
-    date: "2024-10-04",
-    rawScore: 88,
-    totalAttempts: 100,
-    accuracy: 88,
-  },
-  {
-    game: 5,
-    date: "2024-10-04",
-    rawScore: 92,
-    totalAttempts: 100,
-    accuracy: 92,
-  },
-];
+interface GameModeTabProps {
+  data: MmAnalyticsResponse[] | NnAnalyticsResponse[];
+  title: string;
+}
 
-const gameMode2Data = [
-  {
-    game: 1,
-    date: "2024-10-01",
-    rawScore: 70,
-    totalAttempts: 100,
-    accuracy: 70,
-  },
-  {
-    game: 2,
-    date: "2024-10-02",
-    rawScore: 75,
-    totalAttempts: 100,
-    accuracy: 75,
-  },
-  {
-    game: 3,
-    date: "2024-10-03",
-    rawScore: 80,
-    totalAttempts: 100,
-    accuracy: 80,
-  },
-  {
-    game: 4,
-    date: "2024-10-04",
-    rawScore: 78,
-    totalAttempts: 100,
-    accuracy: 78,
-  },
-  {
-    game: 5,
-    date: "2024-10-05",
-    rawScore: 82,
-    totalAttempts: 100,
-    accuracy: 82,
-  },
-];
+const MAKE_MOVE_TITLE = "Make that Move Statistics";
+const NAME_NOTATION_TITLE = "Name that Notation Statistics";
 
-const GameModeTab = ({ data, title }) => {
-  const totalCorrect = data.reduce((sum, game) => sum + game.rawScore, 0);
-  const totalAttempts = data.reduce((sum, game) => sum + game.totalAttempts, 0);
+const GameModeTab = (props: GameModeTabProps) => {
+  const { data, title } = props;
+
+  const totalCorrect = data.reduce((sum, game) => sum + game.score, 0);
+  const totalSkips = data.reduce((sum, game) => sum + game.skips, 0);
+  const totalAttempts = data.reduce((sum, game) => sum + game.total, 0);
   const pieData = [
     { name: "Correct", value: totalCorrect },
     { name: "Incorrect", value: totalAttempts - totalCorrect },
+    { name: "Skips", value: totalSkips },
   ];
-  const COLORS = ["#0088FE", "#FF8042"];
+  const COLORS = ["#47B39C", "#EC6B56", "#FFC154"];
 
   return (
     <div className="p-4">
@@ -119,18 +63,18 @@ const GameModeTab = ({ data, title }) => {
           <AreaChart data={data} syncId="anyId">
             <defs>
               <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                <stop offset="5%" stopColor="#8884d8" stopOpacity={1} />
+                <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="game" />
+            <XAxis />
             <YAxis />
             <Tooltip />
             <Legend />
             <Area
               type="monotone"
-              dataKey="rawScore"
+              dataKey="score"
               stroke="#8884d8"
               fillOpacity={1}
               fill="url(#colorScore)"
@@ -145,8 +89,8 @@ const GameModeTab = ({ data, title }) => {
           <AreaChart data={data} syncId="anyId">
             <defs>
               <linearGradient id="colorAccuracy" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                <stop offset="5%" stopColor="#82ca9d" stopOpacity={1} />
+                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.2} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" />
@@ -165,6 +109,36 @@ const GameModeTab = ({ data, title }) => {
         </ResponsiveContainer>
       </div>
 
+      {title === NAME_NOTATION_TITLE && (
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-2">
+            Correct vs Incorrect Answers vs Skips
+          </h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
       <div>
         <h3 className="text-xl font-semibold mb-2">Game Details</h3>
         <div className="h-80 overflow-auto">
@@ -174,18 +148,22 @@ const GameModeTab = ({ data, title }) => {
               <TableRow>
                 <TableHead>Game</TableHead>
                 <TableHead>Date Played</TableHead>
-                <TableHead>Raw Score</TableHead>
+                <TableHead>Correct Guesses</TableHead>
                 <TableHead>Total Attempts</TableHead>
+                {data[0]?.skips !== undefined && <TableHead>Skips</TableHead>}
                 <TableHead>Accuracy (%)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((game) => (
-                <TableRow key={game.game}>
-                  <TableCell>{game.game}</TableCell>
-                  <TableCell>{game.date}</TableCell>
-                  <TableCell>{game.rawScore}</TableCell>
-                  <TableCell>{game.totalAttempts}</TableCell>
+              {data.map((game, index) => (
+                <TableRow key={index}>
+                  <TableCell>{index}</TableCell>
+                  <TableCell>{new Date(game.date).toDateString()}</TableCell>
+                  <TableCell>{game.score}</TableCell>
+                  <TableCell>{game.total}</TableCell>
+                  {game.skips !== undefined && (
+                    <TableCell>{game.skips}</TableCell>
+                  )}
                   <TableCell>{game.accuracy}%</TableCell>
                 </TableRow>
               ))}
@@ -198,6 +176,58 @@ const GameModeTab = ({ data, title }) => {
 };
 
 const Analytics = () => {
+  const user = useUser();
+  const [mmAnalyticsData, setMmAnalyticsData] = useState<MmAnalyticsResponse[]>(
+    []
+  );
+  const [nnAnalyticsData, setNnAnalyticsData] = useState<NnAnalyticsResponse[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user.isLoggedIn) return;
+      let [mmData, nnData] = await Promise.all([
+        getMmAnalyticsByUsername(user.username, user.password),
+        getNnAnalyticsByUsername(user.username, user.password),
+      ]);
+      // Calculate accuracy (score / total) %
+      if (mmData) {
+        mmData = mmData.map((game) => {
+          return {
+            ...game,
+            accuracy:
+              game.total === 0
+                ? "0.00"
+                : ((game.score / game.total) * 100).toFixed(2),
+          };
+        });
+      } else {
+        mmData = [];
+      }
+      // Calculate accuracy
+      if (nnData) {
+        nnData = nnData.map((game) => {
+          return {
+            ...game,
+            accuracy:
+              game.total === 0
+                ? "0.00"
+                : ((game.score / game.total) * 100).toFixed(2),
+            incorrect: game.total - game.score - game.skips,
+          };
+        });
+      } else {
+        nnData = [];
+      }
+
+      setMmAnalyticsData(mmData);
+      setNnAnalyticsData(nnData);
+    };
+
+    fetchData();
+  }, [user.isLoggedIn, user.password, user.username]);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Game Analytics</h1>
@@ -207,13 +237,10 @@ const Analytics = () => {
           <TabsTrigger value="namenotation">Name that Notation</TabsTrigger>
         </TabsList>
         <TabsContent value="makemove">
-          <GameModeTab data={gameMode1Data} title="Make that Move Statistics" />
+          <GameModeTab data={mmAnalyticsData} title={MAKE_MOVE_TITLE} />
         </TabsContent>
         <TabsContent value="namenotation">
-          <GameModeTab
-            data={gameMode2Data}
-            title="Name that Notation Statistics"
-          />
+          <GameModeTab data={nnAnalyticsData} title={NAME_NOTATION_TITLE} />
         </TabsContent>
       </Tabs>
     </div>

@@ -21,11 +21,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isMobile } from "@/utils/isMobile";
+import { createMmAnalytics } from "@/services/mmAnalyticsService";
+import { useUser } from "@/components/UserProvider";
 
 const defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const MAX_TIME = 60;
 
 const MakeMoveInstructions = () => {
+  const user = useUser();
   const gameOptions = useGameOptions();
   const fen = useFen();
   const navigate = useNavigate();
@@ -61,22 +64,35 @@ const MakeMoveInstructions = () => {
 
   useEffect(() => {
     if (!isActiveGame || !isTimed) return;
-    // Set an interval to decrease the count every second (1000 ms)
-    const interval = setInterval(() => {
+
+    const handleInterval = () => {
       setTime((prevTime) => {
+        // When time gets to 0, switch off game and save game data
         if (prevTime <= 0.1) {
-          clearInterval(interval); // Stop the countdown when it reaches 0
+          clearInterval(interval);
           setShowPopup(true);
           setIsActiveGame(false);
           return 0;
         }
         return prevTime - 0.1;
       });
-    }, 100);
+    };
+
+    const interval = setInterval(handleInterval, 100);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActiveGame]);
+  }, [isActiveGame, isTimed, score, total]);
+
+  // Create MmAnalytics when game is over
+  useEffect(() => {
+    const handleCreateMmAnalytics = async () => {
+      if (time === 0 && user.isLoggedIn) {
+        await createMmAnalytics(user.username, user.password, score, total);
+      }
+    };
+
+    handleCreateMmAnalytics();
+  }, [score, time, total, user.isLoggedIn, user.password, user.username]);
 
   // Returns true if it involves a check, checkmate, or castling
   const isSpecialMove = (move: string) => {

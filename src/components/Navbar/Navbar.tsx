@@ -58,6 +58,19 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const handleGoToAnalytics = () => {
+    if (!user.isLoggedIn) {
+      toast({
+        title: "Error!",
+        description: "You must be logged in to view analytics.",
+        variant: "destructive",
+      });
+      navigate("/");
+    } else {
+      navigate("/analytics");
+    }
+  };
+
   const handleSignOut = () => {
     user.handleLogout();
     toast({
@@ -113,23 +126,22 @@ const Navbar = () => {
               Learn
             </div>
           </Link>
-          <Link to="/analytics">
-            <div
-              className={`${classes.navElement} ${classes.clickableElement}`}
-            >
-              Analytics
-            </div>
-          </Link>
+          <div
+            className={`${classes.navElement} ${classes.clickableElement}`}
+            onClick={handleGoToAnalytics}
+          >
+            Analytics
+          </div>
         </div>
         <div className={`${classes.navSectionContainer}`}>
-          <Link to="settings">
+          <Link to="/settings">
             <div
               className={`${classes.navElement} ${classes.clickableElement}`}
             >
               Settings
             </div>
           </Link>
-          <Link to="report-bug">
+          <Link to="/report-bug">
             <div
               className={`${classes.navElement} ${classes.clickableElement}`}
             >
