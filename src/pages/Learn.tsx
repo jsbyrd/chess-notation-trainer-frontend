@@ -1,12 +1,12 @@
 const Learn = () => {
   return (
-    <div className="flex-grow overflow-auto pl-[60px] pt-[30px] p-4">
-      <h1 className="text-3xl font-bold mb-6">
+    <div className="flex-grow overflow-auto mx-[20px] md:ml-[60px] mt-[30px] m-4">
+      <h1 className="text-3xl font-bold mb-6 text-center md:text-left">
         Learning Chess Algebraic Notation
       </h1>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
           Introduction to Algebraic Notation
         </h2>
         <p className="mb-4">
@@ -18,7 +18,7 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
           The Chessboard Coordinates
         </h2>
         <p className="mb-4">
@@ -39,7 +39,9 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Piece Notation</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
+          Piece Notation
+        </h2>
         <p className="mb-4">Each piece is represented by a capital letter:</p>
         <ul className="list-disc list-inside mb-4">
           <li>K = King</li>
@@ -52,7 +54,9 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Basic Move Notation</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
+          Basic Move Notation
+        </h2>
         <p className="mb-4">To notate a move:</p>
         <ol className="list-decimal list-inside mb-4">
           <li>Write the piece letter (except for pawns)</li>
@@ -67,7 +71,9 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Special Notations</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
+          Special Notations
+        </h2>
         <ul className="list-disc list-inside mb-4">
           <li>Castling: O-O for kingside, O-O-O for queenside</li>
           <li>Captures: Use 'x'. Example: Bxe5 (Bishop captures on e5)</li>
@@ -85,7 +91,9 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Disambiguation</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
+          Disambiguation
+        </h2>
         <p className="mb-4">
           When two identical pieces can move to the same square, add the file
           (column) or rank (row) of the starting square to distinguish them:
@@ -97,7 +105,9 @@ const Learn = () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Practice Exercise</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center md:text-left">
+          Practice Exercise
+        </h2>
         <p className="mb-4">Try to notate the following moves:</p>
         <ol className="list-decimal list-inside mb-4">
           <li>Move the pawn in front of the king two squares forward</li>

@@ -66,7 +66,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const Navbar = () => {
+const NavbarDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const classes = useStyles();
   const user = useUser();
@@ -104,7 +104,7 @@ const Navbar = () => {
               <FiMenu size={24} />
             </button>
           </SheetTrigger>
-          <SheetContent side="left" style={{ width: "230px" }}>
+          <SheetContent side="left" style={{ width: "210px" }}>
             <div
               className={`${classes.navContainer} font-medium flex-shrink-0`}
             >
@@ -227,4 +227,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarDrawer;

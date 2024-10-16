@@ -27,10 +27,10 @@ const Home = () => {
               </li>
             </ul>
             <Link to="/make-move">
-              <Button className="mr-2">Make that Move</Button>
+              <Button className="m-1">Make that Move</Button>
             </Link>
             <Link to="/name-notation">
-              <Button>Name that Notation</Button>
+              <Button className="m-1">Name that Notation</Button>
             </Link>
           </CardContent>
         </Card>
@@ -46,10 +46,10 @@ const Home = () => {
               <li>Challenge our AI bot for a game</li>
             </ul>
             <Link to="/play-human">
-              <Button className="mr-2">Play vs Human</Button>
+              <Button className="m-1">Play vs Human</Button>
             </Link>
             <Link to="/play-bot">
-              <Button>Play vs Bot</Button>
+              <Button className="m-1">Play vs Bot</Button>
             </Link>
           </CardContent>
         </Card>
@@ -67,7 +67,7 @@ const Home = () => {
               <li>Learn more about chess algebraic notation</li>
             </ul>
             <Link to="/learn">
-              <Button>Start Learning</Button>
+              <Button className="m-1">Start Learning</Button>
             </Link>
           </CardContent>
         </Card>
@@ -84,7 +84,7 @@ const Home = () => {
               </li>
             </ul>
             <Link to="/analytics">
-              <Button>View Analytics</Button>
+              <Button className="m-1">View Analytics</Button>
             </Link>
           </CardContent>
         </Card>
@@ -95,9 +95,9 @@ const Home = () => {
           Need help or found a bug? We're here to assist you!
         </p>
         <Link to="/settings">
-          <Button className="mr-2">Settings</Button>
+          <Button className="m-1">Settings</Button>
         </Link>
-        <Button>Report Bug</Button>
+        <Button className="m-1">Report Bug</Button>
       </div>
     </div>
   );

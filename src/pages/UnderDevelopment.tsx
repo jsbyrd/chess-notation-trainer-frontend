@@ -6,11 +6,12 @@ const UnderDevelopment = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">
-        Feature is not yet developed :(
+        Feature is not yet developed...
       </h1>
 
       <h3 className="text-center font-bold px-4 pb-4">
-        In the meantime, feel free to check out these other cool features
+        In the meantime, feel free to check out these other cool features that
+        I've built 😉
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -31,10 +32,10 @@ const UnderDevelopment = () => {
               </li>
             </ul>
             <Link to="/make-move">
-              <Button className="mr-2">Make that Move</Button>
+              <Button className="m-1">Make that Move</Button>
             </Link>
             <Link to="/name-notation">
-              <Button>Name that Notation</Button>
+              <Button className="m-1">Name that Notation</Button>
             </Link>
           </CardContent>
         </Card>
@@ -50,10 +51,10 @@ const UnderDevelopment = () => {
               <li>Challenge our AI bot for a game</li>
             </ul>
             <Link to="/play-human">
-              <Button className="mr-2">Play vs Human</Button>
+              <Button className="m-1">Play vs Human</Button>
             </Link>
             <Link to="/play-bot">
-              <Button>Play vs Bot</Button>
+              <Button className="m-1">Play vs Bot</Button>
             </Link>
           </CardContent>
         </Card>
@@ -71,7 +72,7 @@ const UnderDevelopment = () => {
               <li>Learn more about chess algebraic notation</li>
             </ul>
             <Link to="/learn">
-              <Button>Start Learning</Button>
+              <Button className="m-1">Start Learning</Button>
             </Link>
           </CardContent>
         </Card>
@@ -88,7 +89,7 @@ const UnderDevelopment = () => {
               </li>
             </ul>
             <Link to="/analytics">
-              <Button>View Analytics</Button>
+              <Button className="m-1">View Analytics</Button>
             </Link>
           </CardContent>
         </Card>
